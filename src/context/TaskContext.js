@@ -44,42 +44,66 @@ const TaskProvider = ({ children }) => {
     // Eliminar tarea en el backend y actualizar el estado
     const deleteTask = async (id) => {
         try {
-          const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-          if (!response.ok) {
-            console.error('Error al eliminar la tarea:', response.status, response.statusText);
-            return; // Salimos si hay un error
-          }
-          // Filtrar la tarea eliminada del estado local
-          setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
-          console.log('Tarea eliminada correctamente');
+            const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            if (!response.ok) {
+                console.error('Error al eliminar la tarea:', response.status, response.statusText);
+                return; // Salimos si hay un error
+            }
+            // Filtrar la tarea eliminada del estado local
+            setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+            console.log('Tarea eliminada correctamente');
         } catch (error) {
-          console.error('Error en la conexión:', error.message);
+            console.error('Error en la conexión:', error.message);
         }
-      };
+    };
 
     // Actualizar tarea en el backend y actualizar el estado
-      const updateTask = async (id, updatedTask) => {
+    const updateTask = async (id, updatedTask) => {
         try {
-          const response = await fetch(`${API_URL}/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(updatedTask),
-          });
-          if (!response.ok) {
-            console.error('Error al actualizar la tarea:', response.status, response.statusText);
-            return;
-          }
-          const updatedTaskFromBackend = await response.json();
-          setTasks((prevTasks) =>
-            prevTasks.map((task) =>
-              task._id === id ? updatedTaskFromBackend : task
-            )
-          );
-          console.log('Tarea actualizada correctamente');
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTask),
+            });
+            if (!response.ok) {
+                console.error('Error al actualizar la tarea:', response.status, response.statusText);
+                return;
+            }
+            const updatedTaskFromBackend = await response.json();
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task._id === id ? updatedTaskFromBackend : task
+                )
+            );
+            console.log('Tarea actualizada correctamente');
         } catch (error) {
-          console.error('Error en la conexión:', error.message);
+            console.error('Error en la conexión:', error.message);
         }
-      };
+    };
+
+    // Cambiar el estado de 'completed' en el backend y actualizar el estado
+    const toggleComplete = async (id, completed) => {
+        try {
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completed: !completed }), // Cambiamos el estado de 'completed'
+            });
+            if (!response.ok) {
+                console.error('Error al actualizar el estado de la tarea:', response.status, response.statusText);
+                return;
+            }
+            const updatedTask = await response.json();
+            setTasks((prevTasks) =>
+                prevTasks.map((task) =>
+                    task._id === id ? updatedTask : task
+                )
+            );
+            console.log('Tarea actualizada correctamente');
+        } catch (error) {
+            console.error('Error en la conexión:', error.message);
+        }
+    };
 
     // Cargar tareas al montar el componente
     useEffect(() => {
@@ -91,6 +115,7 @@ const TaskProvider = ({ children }) => {
         deleteTask,
         createTask,
         updateTask,
+        toggleComplete,
     };
 
     return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

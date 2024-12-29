@@ -3,13 +3,17 @@ import { useTasks } from '../context/TaskContext';
 import EditTaskForm from './EditTaskForm';
 
 const TaskList = () => {
-  const { tasks, deleteTask } = useTasks();
+  const { tasks, deleteTask, toggleComplete } = useTasks();
   const [editingTask, setEditingTask] = useState(null); // Estado para manejar la tarea en edición
 
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
       await deleteTask(id); // Esperamos a que la tarea sea eliminada
     }
+  };
+
+  const handleToggleComplete = async (task) => {
+    await toggleComplete(task._id, task.completed); // Cambiar el estado de la tarea
   };
 
   return (
@@ -25,10 +29,20 @@ const TaskList = () => {
               className="flex items-center justify-between p-4 mb-2 bg-gray-100 rounded-lg"
             >
               <div>
-                <h3 className="font-bold text-gray-800">{task.title}</h3>
-                <p className="text-sm text-gray-600">{task.description}</p>
+                <h3 className={`font-bold ${task.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}>
+                  {task.title}
+                </h3>
+                <p className={`text-sm ${task.completed ? 'line-through text-gray-400' : 'text-gray-600'}`}>
+                  {task.description}
+                </p>
               </div>
               <div className="flex items-center gap-2">
+                <button
+                  className={`text-sm ${task.completed ? 'text-green-500' : 'text-yellow-500'} hover:underline`}
+                  onClick={() => handleToggleComplete(task)} // Marcar tarea como completada o pendiente
+                >
+                  {task.completed ? 'Marcar como pendiente' : 'Marcar como completada'}
+                </button>
                 <button
                   className="text-sm text-blue-500 hover:underline"
                   onClick={() => setEditingTask(task)} // Abrir el formulario de edición
