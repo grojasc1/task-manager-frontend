@@ -1,48 +1,43 @@
-import React, { createContext, useEffect, useState } from "react";
-import { getTasks, createTask, updateTask, deleteTask } from '../services/taskService';
+import React, { createContext, useContext, useState } from "react";
 
+// Creamos el contexto
 const TaskContext = createContext();
 
-export const TaskProvider = ({ children }) => {
-    const [tasks, setTasks] = useState([]);
-    const [loading, setLoading] = useState(false);
+// Hook para acceder al contexto
+export const useTasks = () => {
+    return useContext(TaskContext);
+}
 
-    useEffect(() => {
-        fetchTasks();
-    }, []); 
+// Proveedor del contexto
+const TaskProvider = ({ children }) => {
+    const [tasks, setTasks] = useState([]); // Estado para almacenar las tareas
 
-    const fetchTasks = async () => {
-        setLoading(true);
-        const data = await getTasks();
-        setTasks(data);
-        setLoading(false);
+    // Función para agregar una tarea
+    const addTask = (task) => {
+        setTasks((prevTasks) => [...prevTasks, task]); 
     };
 
-    const addTask = async (task) => {
-        const newTask = await createTask(task);
-        setTasks([...tasks, newTask]);
+    // Función para actualizar una tarea (completarla/descompletarla o editarla)
+    const updateTask = (id, updatedTask) => {
+        setTasks((prevTasks) => {
+            prevTasks.map((task) => (task.id === id ? { ...task, ...updatedTask } : task));
+        });
     };
 
-    const editTask = async (id, updatedTask) => {
-        const task = await updateTask(id, updatedTask);
-        setTasks(tasks.map((t) => (t.id === id ? task : t)));
+    // Función para eliminar una tarea
+    const deleteTask = (id) => {
+        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
     };
 
-    const removeTask = async (id) => {
-        await deleteTask(id);
-        setTasks(tasks.filter((t) => t.id !== id));
+    // Contexto a proveer
+    const value = {
+        tasks,
+        addTask,
+        updateTask,
+        deleteTask,
     };
 
-    const markComplete = (id) => {
-        const task = tasks.find((t) => t._id === id);
-        editTask(id, { ...task, completed: !task.completed });
-    };
-
-    return (
-        <TaskContext.Provider value={{ tasks, loading, addTask, editTask, removeTask, markComplete }}>
-            {children}
-        </TaskContext.Provider>
-    );
+    return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 };
 
-export default TaskContext;
+export default TaskProvider;
