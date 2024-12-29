@@ -57,6 +57,30 @@ const TaskProvider = ({ children }) => {
         }
       };
 
+    // Actualizar tarea en el backend y actualizar el estado
+      const updateTask = async (id, updatedTask) => {
+        try {
+          const response = await fetch(`${API_URL}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedTask),
+          });
+          if (!response.ok) {
+            console.error('Error al actualizar la tarea:', response.status, response.statusText);
+            return;
+          }
+          const updatedTaskFromBackend = await response.json();
+          setTasks((prevTasks) =>
+            prevTasks.map((task) =>
+              task._id === id ? updatedTaskFromBackend : task
+            )
+          );
+          console.log('Tarea actualizada correctamente');
+        } catch (error) {
+          console.error('Error en la conexión:', error.message);
+        }
+      };
+
     // Cargar tareas al montar el componente
     useEffect(() => {
         fetchTasks();
@@ -66,6 +90,7 @@ const TaskProvider = ({ children }) => {
         tasks,
         deleteTask,
         createTask,
+        updateTask,
     };
 
     return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;

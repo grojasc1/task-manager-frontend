@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTasks } from '../context/TaskContext';
+import EditTaskForm from './EditTaskForm';
 
 const TaskList = () => {
   const { tasks, deleteTask } = useTasks();
+  const [editingTask, setEditingTask] = useState(null); // Estado para manejar la tarea en edición
 
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
       await deleteTask(id); // Esperamos a que la tarea sea eliminada
     }
   };
-  
 
   return (
     <div className="mt-4">
@@ -30,7 +31,7 @@ const TaskList = () => {
               <div className="flex items-center gap-2">
                 <button
                   className="text-sm text-blue-500 hover:underline"
-                  onClick={() => console.log('Editar', task.id)}
+                  onClick={() => setEditingTask(task)} // Abrir el formulario de edición
                 >
                   Editar
                 </button>
@@ -45,6 +46,16 @@ const TaskList = () => {
           ))
         )}
       </ul>
+
+      {/* Mostrar el formulario de edición cuando editingTask no sea null */}
+      {editingTask && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <EditTaskForm
+            task={editingTask}
+            onClose={() => setEditingTask(null)} // Cerrar el formulario
+          />
+        </div>
+      )}
     </div>
   );
 };
