@@ -66,6 +66,9 @@ const TaskList = () => {
                 <p className={`text-sm ${task.completed ? 'line-through text-gray-400' : 'text-gray-600'}`}>
                   {task.description}
                 </p>
+                <p>
+                    <small className="text-gray-500">Creada el {new Date(task.createdAt).toLocaleDateString()}</small>
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <button
