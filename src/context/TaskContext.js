@@ -131,7 +131,7 @@ const TaskProvider = ({ children }) => {
         toggleComplete,
     };
 
-    return <TaskContext.Provider value={{tasks, createTask, deleteTask, toggleComplete, message}}>{children}</TaskContext.Provider>;
+    return <TaskContext.Provider value={{tasks, createTask, deleteTask, toggleComplete, message, value}}>{children}</TaskContext.Provider>;
 };
 
 export default TaskProvider;
