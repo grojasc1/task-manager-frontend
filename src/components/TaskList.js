@@ -3,9 +3,9 @@ import { useTasks } from '../context/TaskContext';
 import EditTaskForm from './EditTaskForm';
 
 const TaskList = () => {
-  const { tasks, deleteTask, toggleComplete } = useTasks();
+  const { tasks, deleteTask, toggleComplete, message } = useTasks();
   const [editingTask, setEditingTask] = useState(null);
-  const [filter, setFilter] = useState('all'); // Estado para el filtro
+  const [filter, setFilter] = useState('all');
 
   const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
@@ -17,11 +17,10 @@ const TaskList = () => {
     await toggleComplete(task._id, task.completed);
   };
 
-  // Filtrar las tareas según el estado seleccionado
   const filteredTasks = tasks.filter((task) => {
     if (filter === 'completed') return task.completed;
     if (filter === 'pending') return !task.completed;
-    return true; // 'all' muestra todas las tareas
+    return true;
   });
 
   return (
@@ -41,6 +40,15 @@ const TaskList = () => {
           <option value="pending">Pendientes</option>
         </select>
       </div>
+
+      {/* Mostrar mensaje de éxito o error */}
+      {message && (
+        <div
+          className={`p-2 mb-4 text-white ${message.includes('Error') ? 'bg-red-500' : 'bg-green-500'} rounded-lg`}
+        >
+          {message}
+        </div>
+      )}
 
       <ul className="mt-2">
         {filteredTasks.length === 0 ? (

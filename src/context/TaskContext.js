@@ -9,6 +9,12 @@ export const useTasks = () => useContext(TaskContext);
 
 const TaskProvider = ({ children }) => {
     const [tasks, setTasks] = useState([]);
+    const [message, setMessage] = useState(null);
+
+    const showMessage = (msg) => {
+        setMessage(msg);
+        setTimeout(() => setMessage(null), 3000);
+    };
 
     // Cargar tareas desde el backend
     const fetchTasks = async () => {
@@ -36,8 +42,10 @@ const TaskProvider = ({ children }) => {
             if (!response.ok) throw new Error('Error al agregar tarea');
             const newTask = await response.json();
             setTasks((prevTasks) => [...prevTasks, newTask]); // Actualizar estado
+            showMessage('Tarea agregada correctamente');
         } catch (error) {
             console.error(error.message);
+            showMessage('Error al agregar tarea');
         }
     };
 
@@ -51,9 +59,10 @@ const TaskProvider = ({ children }) => {
             }
             // Filtrar la tarea eliminada del estado local
             setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
-            console.log('Tarea eliminada correctamente');
+            showMessage('Tarea eliminada correctamente');
         } catch (error) {
             console.error('Error en la conexión:', error.message);
+            showMessage('Error al eliminar tarea');
         }
     };
 
@@ -67,6 +76,7 @@ const TaskProvider = ({ children }) => {
             });
             if (!response.ok) {
                 console.error('Error al actualizar la tarea:', response.status, response.statusText);
+                showMessage('Error al actualizar tarea');
                 return;
             }
             const updatedTaskFromBackend = await response.json();
@@ -75,9 +85,10 @@ const TaskProvider = ({ children }) => {
                     task._id === id ? updatedTaskFromBackend : task
                 )
             );
-            console.log('Tarea actualizada correctamente');
+            showMessage('Tarea actualizada correctamente');
         } catch (error) {
             console.error('Error en la conexión:', error.message);
+            showMessage('Error al actualizar tarea');
         }
     };
 
@@ -100,8 +111,10 @@ const TaskProvider = ({ children }) => {
                 )
             );
             console.log('Tarea actualizada correctamente');
+            showMessage('Estado de la tarea actualizado correctamente');
         } catch (error) {
             console.error('Error en la conexión:', error.message);
+            showMessage('Error al actualizar el estado de la tarea');
         }
     };
 
@@ -118,7 +131,7 @@ const TaskProvider = ({ children }) => {
         toggleComplete,
     };
 
-    return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
+    return <TaskContext.Provider value={{tasks, createTask, deleteTask, toggleComplete, message}}>{children}</TaskContext.Provider>;
 };
 
 export default TaskProvider;
