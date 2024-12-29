@@ -4,11 +4,12 @@ import { useTasks } from '../context/TaskContext';
 const TaskList = () => {
   const { tasks, deleteTask } = useTasks();
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-      deleteTask(id);
+      await deleteTask(id); // Esperamos a que la tarea sea eliminada
     }
   };
+  
 
   return (
     <div className="mt-4">
@@ -19,7 +20,7 @@ const TaskList = () => {
         ) : (
           tasks.map((task) => (
             <li
-              key={task.id}
+              key={task._id}
               className="flex items-center justify-between p-4 mb-2 bg-gray-100 rounded-lg"
             >
               <div>
@@ -35,7 +36,7 @@ const TaskList = () => {
                 </button>
                 <button
                   className="text-sm text-red-500 hover:underline"
-                  onClick={() => handleDelete(task.id)}
+                  onClick={() => handleDelete(task._id)}
                 >
                   Eliminar
                 </button>

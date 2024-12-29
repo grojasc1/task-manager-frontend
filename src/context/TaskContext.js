@@ -44,13 +44,18 @@ const TaskProvider = ({ children }) => {
     // Eliminar tarea en el backend y actualizar el estado
     const deleteTask = async (id) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Error al eliminar tarea');
-            setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+          const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+          if (!response.ok) {
+            console.error('Error al eliminar la tarea:', response.status, response.statusText);
+            return; // Salimos si hay un error
+          }
+          // Filtrar la tarea eliminada del estado local
+          setTasks((prevTasks) => prevTasks.filter((task) => task._id !== id));
+          console.log('Tarea eliminada correctamente');
         } catch (error) {
-            console.error(error.message);
+          console.error('Error en la conexión:', error.message);
         }
-    };
+      };
 
     // Cargar tareas al montar el componente
     useEffect(() => {
