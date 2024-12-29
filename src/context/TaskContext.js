@@ -1,43 +1,52 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Creamos el contexto
+// URL del backend
+const API_URL = 'https://task-manager-backend-production-5cb8.up.railway.app/api/tasks';
+
 const TaskContext = createContext();
 
-// Hook para acceder al contexto
-export const useTasks = () => {
-    return useContext(TaskContext);
-}
+export const useTasks = () => useContext(TaskContext);
 
-// Proveedor del contexto
 const TaskProvider = ({ children }) => {
-    const [tasks, setTasks] = useState([]); // Estado para almacenar las tareas
+  const [tasks, setTasks] = useState([]);
 
-    // Función para agregar una tarea
-    const addTask = (task) => {
-        setTasks((prevTasks) => [...prevTasks, task]); 
-    };
+  // Cargar tareas desde el backend
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch(API_URL, {mode: 'cors'});
+      if (!response.ok) {
+        console.error('Error en la respuesta:', response.status, response.statusText);
+        throw new Error('Error al obtener tareas');
+      }
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error('Error en la conexión',error.message);
+    }
+  };
 
-    // Función para actualizar una tarea (completarla/descompletarla o editarla)
-    const updateTask = (id, updatedTask) => {
-        setTasks((prevTasks) => {
-            prevTasks.map((task) => (task.id === id ? { ...task, ...updatedTask } : task));
-        });
-    };
+  // Eliminar tarea en el backend y actualizar el estado
+  const deleteTask = async (id) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Error al eliminar tarea');
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
-    // Función para eliminar una tarea
-    const deleteTask = (id) => {
-        setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-    };
+  // Cargar tareas al montar el componente
+  useEffect(() => {
+    fetchTasks();
+  }, []);
 
-    // Contexto a proveer
-    const value = {
-        tasks,
-        addTask,
-        updateTask,
-        deleteTask,
-    };
+  const value = {
+    tasks,
+    deleteTask,
+  };
 
-    return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
+  return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 };
 
 export default TaskProvider;

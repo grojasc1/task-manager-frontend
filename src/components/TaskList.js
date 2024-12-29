@@ -2,7 +2,13 @@ import React from 'react';
 import { useTasks } from '../context/TaskContext';
 
 const TaskList = () => {
-  const { tasks } = useTasks();
+  const { tasks, deleteTask } = useTasks();
+
+  const handleDelete = (id) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+      deleteTask(id);
+    }
+  };
 
   return (
     <div className="mt-4">
@@ -21,8 +27,18 @@ const TaskList = () => {
                 <p className="text-sm text-gray-600">{task.description}</p>
               </div>
               <div className="flex items-center gap-2">
-                <button className="text-sm text-blue-500">Editar</button>
-                <button className="text-sm text-red-500">Eliminar</button>
+                <button
+                  className="text-sm text-blue-500 hover:underline"
+                  onClick={() => console.log('Editar', task.id)}
+                >
+                  Editar
+                </button>
+                <button
+                  className="text-sm text-red-500 hover:underline"
+                  onClick={() => handleDelete(task.id)}
+                >
+                  Eliminar
+                </button>
               </div>
             </li>
           ))
