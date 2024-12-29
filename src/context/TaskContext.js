@@ -8,45 +8,62 @@ const TaskContext = createContext();
 export const useTasks = () => useContext(TaskContext);
 
 const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
+    const [tasks, setTasks] = useState([]);
 
-  // Cargar tareas desde el backend
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch(API_URL, {mode: 'cors'});
-      if (!response.ok) {
-        console.error('Error en la respuesta:', response.status, response.statusText);
-        throw new Error('Error al obtener tareas');
-      }
-      const data = await response.json();
-      setTasks(data);
-    } catch (error) {
-      console.error('Error en la conexión',error.message);
-    }
-  };
+    // Cargar tareas desde el backend
+    const fetchTasks = async () => {
+        try {
+            const response = await fetch(API_URL, { mode: 'cors' });
+            if (!response.ok) {
+                console.error('Error en la respuesta:', response.status, response.statusText);
+                throw new Error('Error al obtener tareas');
+            }
+            const data = await response.json();
+            setTasks(data);
+        } catch (error) {
+            console.error('Error en la conexión', error.message);
+        }
+    };
 
-  // Eliminar tarea en el backend y actualizar el estado
-  const deleteTask = async (id) => {
-    try {
-      const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-      if (!response.ok) throw new Error('Error al eliminar tarea');
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+    // Agregar tarea en el backend y actualizar el estado
+    const createTask = async (taskData) => {
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(taskData),
+            });
+            if (!response.ok) throw new Error('Error al agregar tarea');
+            const newTask = await response.json();
+            setTasks((prevTasks) => [...prevTasks, newTask]); // Actualizar estado
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
-  // Cargar tareas al montar el componente
-  useEffect(() => {
-    fetchTasks();
-  }, []);
+    // Eliminar tarea en el backend y actualizar el estado
+    const deleteTask = async (id) => {
+        try {
+            const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            if (!response.ok) throw new Error('Error al eliminar tarea');
+            setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
 
-  const value = {
-    tasks,
-    deleteTask,
-  };
+    // Cargar tareas al montar el componente
+    useEffect(() => {
+        fetchTasks();
+    }, []);
 
-  return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
+    const value = {
+        tasks,
+        deleteTask,
+        createTask,
+    };
+
+    return <TaskContext.Provider value={value}>{children}</TaskContext.Provider>;
 };
 
 export default TaskProvider;
