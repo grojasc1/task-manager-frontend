@@ -1,9 +1,20 @@
+// Importación de dependencias y hooks necesarios
 import React, { useState } from 'react';
-import { useTasks } from '../context/TaskContext';
+import { useTasks } from '../hooks/useTasks';
 import EditTaskForm from './EditTaskForm';
 
-const TaskList = () => {
-  const { tasks, deleteTask, toggleComplete, message } = useTasks();
+/**
+ * Componente TaskList
+ * 
+ * Este componente representa una lista de tareas. Filtra las tareas según el estado de completado
+ * y muestra mensajes de éxito o error basados en las acciones realizadas.
+ * 
+ * @param {Object} props - Las propiedades del componente.
+ * @param {Array} props.tasks - Lista de tareas a mostrar.
+ * @param {String} props.message - Mensaje a mostrar (éxito o error).
+ */
+const TaskList = ({ tasks, message }) => {
+  const { toggleTaskCompletion, deleteTask } = useTasks(); // Hook personalizado para manejar tareas
   const [editingTask, setEditingTask] = useState(null);
   const [filter, setFilter] = useState('all');
 
@@ -14,7 +25,7 @@ const TaskList = () => {
   };
 
   const handleToggleComplete = async (task) => {
-    await toggleComplete(task._id, task.completed);
+    await toggleTaskCompletion(task._id, task.completed);
   };
 
   const filteredTasks = tasks.filter((task) => {

@@ -1,30 +1,36 @@
+// Importación de dependencias y hooks necesarios
 import React, { useState } from 'react';
-import { useTasks } from '../context/TaskContext';
+import { useTasks } from '../hooks/useTasks';
 
+// Componente EditTaskForm que recibe la tarea a editar y una función para cerrar el formulario
 const EditTaskForm = ({ task, onClose }) => {
-  const { updateTask } = useTasks();
+  const { updateTask } = useTasks(); // Hook personalizado para actualizar la tarea
 
-  // Debugging
+  // Debugging: Imprimir en consola los props y funciones recibidas
   console.log('EditTaskForm -> task:', task);
   console.log('EditTaskForm -> onClose:', onClose);
   console.log('EditTaskForm -> updateTask:', updateTask);
 
+  // Estados locales para manejar el título y la descripción de la tarea
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
 
+  // Función para manejar el envío del formulario
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!title.trim()) {
+    e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+    if (!title.trim()) { // Validar que el título no esté vacío
       alert('El título es obligatorio');
       return;
     }
 
+    // Debugging: Indicar que se enviarán los datos al backend
     console.log('Enviar datos al backend para actualizar la tarea');
-    await updateTask(task._id, { title, description });
+    await updateTask(task._id, { title, description }); // Actualizar la tarea
     console.log('Tarea actualizada correctamente');
     onClose(); // Cerrar el formulario después de actualizar
   };
 
+  // Renderizar el formulario de edición de tarea
   return (
     <form
       onSubmit={handleSubmit}
