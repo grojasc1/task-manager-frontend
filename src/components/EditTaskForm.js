@@ -14,6 +14,7 @@ const EditTaskForm = ({ task, onClose }) => {
     }
 
     await updateTask(task._id, { title, description });
+    console.log('Tarea actualizada correctamente');
     onClose(); // Cerrar el formulario después de actualizar
   };
 
