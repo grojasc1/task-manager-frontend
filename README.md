@@ -1,70 +1,91 @@
-# Getting Started with Create React App
+# Task Manager Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Task Manager es una aplicación de gestión de tareas que te permite agregar, editar, eliminar y marcar tareas como completadas o pendientes. Esta aplicación está construida utilizando React para el frontend y un backend que gestiona las tareas mediante una API REST.
 
-## Available Scripts
+## Enlace a la aplicación desplegada
 
-In the project directory, you can run:
+Puedes acceder a la aplicación desplegada en el siguiente enlace:
 
-### `npm start`
+[Task Manager en Netlify](https://6771de9555c34f9a8c5ee6b3--task-manager-coally.netlify.app/)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Características
+- Crear tareas con un título, descripción opcional y estado de completado.
+- Listar todas las tareas.
+- Actualizar tareas existentes.
+- Eliminar tareas.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Requisitos previos
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Antes de comenzar, asegúrate de tener instalados los siguientes componentes:
+- [Node.js](https://nodejs.org/) (versión 14 o superior)
+- [npm](https://www.npmjs.com/) (generalmente incluido con Node.js)
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Pasos para instalar y ejecutar el proyecto localmente
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clonar el repositorio:**
+   ```bash
+   git clone https://github.com/grojasc1/task-manager-frontend.git
+   cd task-manager-frontend
+   ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Instalar dependencias:**
+   ```bash
+   npm install
+   ```
 
-### `npm run eject`
+3. **Iniciar el servidor:**
+   ```bash
+   npm start
+   ```
+   Esto iniciará el servidor en el puerto configurado (por defecto, `3000`).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Detalles de configuración
+Este proyecto no requiere configuraciones complejas para funcionar localmente. SIn embargo, si necesitas configurar algunas variables de entorno, puedes crear un archivo `.env` en la raíz del proyecto con las siguientes configuraciones:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Variables de entorno:
+Si deseas configurar el backend de la aplicación (si no es el que está desplegado actualmente en Netlify), puedes agregar la siguiente variable de entorno en el archivo `.env`:
 
-## Learn More
+```bash
+REACT_APP_API_URL=<URL_DEL_BACKEND>
+```
+Este valor por defecto está configurado para usar el backend desplegado en:
+```bash
+https://task-manager-backend-production-5cb8.up.railway.app/api/tasks
+```
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Tecnologías utilizadas
+### Frontend:
+- React.js
+- React Context API
+- Tailwind CSS
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Backend:
+- Node.js
+- Express.js
+- MongoDB
+- Mongoose
+- Jest (para pruebas)
+- Swagger (para documentación interactiva)
 
-### Code Splitting
+### Base de datos:
+- MongoDB
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Despliegue:
+- Netlify (Frontend)
+- Railway (Backend)
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Licencia
 
-### Making a Progressive Web App
+Este proyecto está licenciado bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
