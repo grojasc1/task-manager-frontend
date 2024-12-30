@@ -58,7 +58,7 @@ const TaskList = () => {
             <li
               key={task._id}
               className="flex items-center justify-between p-4 mb-2 bg-gray-100 rounded-lg"
-            >
+            > {console.log(task)}
               <div>
                 <h3 className={`font-bold ${task.completed ? 'line-through text-gray-500' : 'text-gray-800'}`}>
                   {task.title}
