@@ -3,6 +3,12 @@ import { useTasks } from '../context/TaskContext';
 
 const EditTaskForm = ({ task, onClose }) => {
   const { updateTask } = useTasks();
+
+  // Debugging
+  console.log('EditTaskForm -> task:', task);
+  console.log('EditTaskForm -> onClose:', onClose);
+  console.log('EditTaskForm -> updateTask:', updateTask);
+
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || '');
 
@@ -13,6 +19,7 @@ const EditTaskForm = ({ task, onClose }) => {
       return;
     }
 
+    console.log('Enviar datos al backend para actualizar la tarea');
     await updateTask(task._id, { title, description });
     console.log('Tarea actualizada correctamente');
     onClose(); // Cerrar el formulario después de actualizar
